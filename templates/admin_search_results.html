@@ -1,0 +1,38 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Search Results for: "{{ query }}"</h2>
+
+    {% if subjects or chapters or quizzes %}
+        {% if subjects %}
+            <h3>Subjects</h3>
+            <ul class="search-results">
+                {% for subject in subjects %}
+                    <li><a href="{{ url_for('admin.manage_chapters', subject_id=subject.id) }}">{{ subject.name }}</a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if chapters %}
+            <h3>Chapters</h3>
+            <ul class="search-results">
+                {% for chapter in chapters %}
+                    <li><a href="{{ url_for('admin.manage_quizzes', chapter_id=chapter.id) }}">{{ chapter.name }} ({{ chapter.subject.name }})</a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if quizzes %}
+            <h3>Quizzes</h3>
+            <ul class="search-results">
+                {% for quiz in quizzes %}
+                    <li><a href="{{ url_for('admin.show_quiz', quiz_id=quiz.id) }}">{{ quiz.name }} ({{ quiz.chapter.name }})</a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+</div>
+{% endblock %}

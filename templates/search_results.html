@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="search-results-container">
+    <div class="search-results-box">
+        <h2>Search Results for: "{{ query }}"</h2>
+
+        {% if subjects or chapters or quizzes %}
+            {% if quizzes %}
+                <h3>Quizzes</h3>
+                <div class="quiz-results">
+                    {% for quiz in quizzes %}
+                        {% set user_id = session.get('user_id') %}
+                        {% set completed = False %}
+                        {% if user_id %}
+                            {% set score = Score.query.filter_by(quiz_id=quiz.id, user_id=user_id).first() %}
+                            {% if score %}
+                                {% set completed = True %}
+                            {% endif %}
+                        {% endif %}
+
+                        <div class="quiz-result-item">
+                            <div class="quiz-info">
+                                <h4>{{ quiz.name }}</h4>
+                                <p>Chapter: {{ quiz.chapter.name }}</p>
+                                <p>Subject: {{ quiz.chapter.subject.name }}</p>
+                                {% if completed %}
+                                    <div class="completed-status">
+                                        <span class="completion-tag">Completed</span>
+                                        <p>Score: {{ "%.1f"|format(score.total_scored / quiz.questions|length * 100) }}%</p>
+                                    </div>
+                                {% else %}
+                                    {% if quiz.date_of_quiz > now %}
+                                        <div class="upcoming-status">
+                                            <span class="upcoming-tag">Upcoming</span>
+                                            <p>Available from: {{ quiz.date_of_quiz.strftime('%d-%m-%Y %H:%M') }}</p>
+                                        </div>
+                                    {% else %}
+                                        <a href="{{ url_for('user.get_quiz_details', quiz_id=quiz.id) }}" class="quiz-btn">Start Quiz</a>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if subjects %}
+                <h3>Subjects</h3>
+                <ul class="search-list">
+                    {% for subject in subjects %}
+                        <li><a href="{{ url_for('user.list_chapters', subject_id=subject.id) }}">{{ subject.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if chapters %}
+                <h3>Chapters</h3>
+                <ul class="search-list">
+                    {% for chapter in chapters %}
+                        <li><a href="{{ url_for('user.list_quizzes', chapter_id=chapter.id) }}">{{ chapter.name }} ({{ chapter.subject.name }})</a></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% else %}
+            <p class="no-results">No results found.</p>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .search-results-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 20px;
+    }
+
+    .search-results-box {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 800px;
+    }
+
+    .quiz-result-item {
+        background: #f8f9fa;
+        padding: 20px;
+        margin: 15px 0;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .quiz-info h4 {
+        margin: 0 0 10px 0;
+        color: #2c3e50;
+    }
+
+    .quiz-info p {
+        margin: 5px 0;
+        color: #666;
+    }
+
+    .completed-status {
+        margin-top: 15px;
+        padding: 10px;
+        background: #d4edda;
+        border-radius: 6px;
+        text-align: center;
+    }
+
+    .upcoming-status {
+        margin-top: 15px;
+        padding: 10px;
+        background: #fff3cd;
+        border-radius: 6px;
+        text-align: center;
+    }
+
+    .completion-tag {
+        background: #28a745;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.9em;
+    }
+
+    .upcoming-tag {
+        background: #ffc107;
+        color: #000;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.9em;
+    }
+
+    .quiz-btn {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: #28a745;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        margin-top: 15px;
+    }
+
+    .quiz-btn:hover {
+        background-color: #218838;
+        text-decoration: none;
+        color: white;
+    }
+
+    .search-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .search-list li {
+        margin: 10px 0;
+    }
+
+    .search-list a {
+        color: #3498db;
+        text-decoration: none;
+    }
+
+    .search-list a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}

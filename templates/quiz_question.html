@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/style.css') }}">
+</head>
+<body>
+    {% include 'base.html' %}
+    <div class="quiz-container">
+        <div class="quiz-header">
+            <h2>{{ quiz.name }}</h2>
+            <div class="timer">Time Left: <span id="time"></span></div>
+        </div>
+
+        <form id="quizForm" action="{{ url_for('user.submit_quiz', quiz_id=quiz.id) }}" method="POST">
+            <div class="questions-container">
+                {% for question in questions %}
+                    <div class="question-box">
+                        <div class="question-number">Question {{ loop.index }}</div>
+                        <div class="question-text">{{ question.question_statement }}</div>
+                        <div class="options-container">
+                            <label class="option-label">
+                                <input type="radio" name="question_{{ question.id }}" value="1" required>
+                                <span class="option-text">{{ question.option1 }}</span>
+                            </label>
+                            <label class="option-label">
+                                <input type="radio" name="question_{{ question.id }}" value="2" required>
+                                <span class="option-text">{{ question.option2 }}</span>
+                            </label>
+                            {% if question.option3 %}
+                                <label class="option-label">
+                                    <input type="radio" name="question_{{ question.id }}" value="3">
+                                    <span class="option-text">{{ question.option3 }}</span>
+                                </label>
+                            {% endif %}
+                            {% if question.option4 %}
+                                <label class="option-label">
+                                    <input type="radio" name="question_{{ question.id }}" value="4">
+                                    <span class="option-text">{{ question.option4 }}</span>
+                                </label>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="submit" class="submit-quiz-btn">Submit Quiz</button>
+        </form>
+    </div>
+
+    <style>
+        .quiz-container {
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .quiz-header {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .quiz-header h2 {
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        .timer {
+            font-size: 1.2em;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .questions-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .question-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .question-number {
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .question-text {
+            font-size: 1.2em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option-label:hover {
+            background-color: #e9ecef;
+        }
+
+        .option-label input[type="radio"] {
+            margin-right: 12px;
+        }
+
+        .option-text {
+            font-size: 1.1em;
+            color: #2c3e50;
+        }
+
+        .submit-quiz-btn {
+            display: block;
+            width: 200px;
+            margin: 30px auto;
+            padding: 12px 0;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-quiz-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+
+    <script>
+        function startTimer(duration, display) {
+            var timer = duration, minutes, seconds;
+            setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    timer = 0;
+                    document.getElementById('quizForm').submit();
+                }
+            }, 1000);
+        }
+
+        window.onload = function () {
+            var time_left = '{{ time_left }}';
+            var display = document.querySelector('#time');
+            startTimer(time_left, display);
+        };
+    </script>
+</body>
+</html>

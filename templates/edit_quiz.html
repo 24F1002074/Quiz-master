@@ -1,0 +1,237 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h3>Edit Quiz: {{ quiz.name }}</h3>
+        <a href="{{ url_for('admin.manage_quizzes', chapter_id=quiz.chapter_id) }}" class="back-btn">Back to Manage Quizzes</a>
+    </div>
+
+    <form method="POST">
+        <div class="form-group">
+            <label>Quiz Name:</label>
+            <input type="text" name="name" value="{{ quiz.name }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Schedule Date and Time:</label>
+            <input type="datetime-local" name="date_of_quiz" 
+                   value="{{ quiz.date_of_quiz.strftime('%Y-%m-%dT%H:%M') }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Duration (minutes):</label>
+            <input type="number" name="duration" value="{{ quiz.time_duration }}" required>
+        </div>
+
+         <div class="form-group">
+            <label>Remarks:</label>
+            <textarea name="remarks" rows="1">{{ quiz.remarks }}</textarea>
+        </div>
+
+        <div id="questions-container">
+            {% if quiz and quiz.questions %}
+                {% for question in quiz.questions %}
+                    <div class="question-box">
+                        <input type="hidden" name="question_ids[]" value="{{ question.id }}">
+                        <div class="form-group">
+                            <label>Question:</label>
+                            <input type="text" name="questions[]" value="{{ question.question_statement }}" required>
+                        </div>
+                        <div class="options-grid">
+                            <div class="form-group">
+                                <label>Option 1:</label>
+                                <input type="text" name="options1[]" value="{{ question.option1 }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Option 2:</label>
+                                <input type="text" name="options2[]" value="{{ question.option2 }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Option 3:</label>
+                                <input type="text" name="options3[]" value="{{ question.option3 }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Option 4:</label>
+                                <input type="text" name="options4[]" value="{{ question.option4 }}">
+                            </div>
+                        </div>
+                        <div class="question-footer">
+                            <div class="form-group">
+                                <label>Correct Option:</label>
+                                <select name="correct_options[]" required>
+                                    <option value="1" {% if question.correct_option == "1" %}selected{% endif %}>Option 1</option>
+                                    <option value="2" {% if question.correct_option == "2" %}selected{% endif %}>Option 2</option>
+                                    <option value="3" {% if question.correct_option == "3" %}selected{% endif %}>Option 3</option>
+                                    <option value="4" {% if question.correct_option == "4" %}selected{% endif %}>Option 4</option>
+                                </select>
+                            </div>
+                            <button type="button" onclick="removeQuestion(this)" class="btn delete-btn">Remove Question</button>
+                            <input type="hidden" name="deleted_question_ids[]" class="deleted-question-id" value="">
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if new_questions %}
+                {% for i in range(new_questions|length) %}
+                    <div class="question-box">
+                        <div class="form-group">
+                            <label>Question:</label>
+                            <input type="text" name="new_questions[]" value="{{ new_questions[i] }}" required>
+                        </div>
+                        <div class="options-grid">
+                            <div class="form-group">
+                                <label>Option 1:</label>
+                                <input type="text" name="new_options1[]" value="{{ new_options1[i] }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Option 2:</label>
+                                <input type="text" name="new_options2[]" value="{{ new_options2[i] }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Option 3:</label>
+                                <input type="text" name="new_options3[]" value="{{ new_options3[i] }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Option 4:</label>
+                                <input type="text" name="new_options4[]" value="{{ new_options4[i] }}">
+                            </div>
+                        </div>
+                        <div class="question-footer">
+                            <div class="form-group">
+                                <label>Correct Option:</label>
+                                <select name="new_correct_options[]" required>
+                                    <option value="1" {% if new_correct_options[i] == "1" %}selected{% endif %}>Option 1</option>
+                                    <option value="2" {% if new_correct_options[i] == "2" %}selected{% endif %}>Option 2</option>
+                                    <option value="3" {% if new_correct_options[i] == "3" %}selected{% endif %}>Option 3</option>
+                                    <option value="4" {% if new_correct_options[i] == "4" %}selected{% endif %}>Option 4</option>
+                                </select>
+                            </div>
+                            <button type="button" onclick="removeQuestion(this)" class="btn delete-btn">Remove Question</button>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <button type="button" onclick="addQuestion()" class="btn add-btn">Add Question</button>
+        <button type="submit" class="btn submit-btn">Save Changes</button>
+    </form>
+</div>
+
+<script>
+    function addQuestion() {
+        const container = document.getElementById('questions-container');
+        const questionBox = document.createElement('div');
+        questionBox.className = 'question-box';
+        questionBox.innerHTML = `
+            <div class="form-group">
+                <label>Question:</label>
+                <input type="text" name="new_questions[]" required>
+            </div>
+            <div class="options-grid">
+                <div class="form-group">
+                    <label>Option 1:</label>
+                    <input type="text" name="new_options1[]" required>
+                </div>
+                <div class="form-group">
+                    <label>Option 2:</label>
+                    <input type="text" name="new_options2[]" required>
+                </div>
+                <div class="form-group">
+                    <label>Option 3:</label>
+                    <input type="text" name="new_options3[]">
+                </div>
+                <div class="form-group">
+                    <label>Option 4:</label>
+                    <input type="text" name="new_options4[]">
+                </div>
+            </div>
+            <div class="question-footer">
+                <div class="form-group">
+                    <label>Correct Option:</label>
+                    <select name="new_correct_options[]" required>
+                        <option value="1">Option 1</option>
+                        <option value="2">Option 2</option>
+                        <option value="3">Option 3</option>
+                        <option value="4">Option 4</option>
+                    </select>
+                </div>
+                <button type="button" onclick="removeQuestion(this)" class="btn delete-btn">Remove Question</button>
+            </div>
+        `;
+        container.appendChild(questionBox);
+    }
+
+    function removeQuestion(button) {
+        const questionBox = button.closest('.question-box');
+        const questionId = questionBox.querySelector('input[name="question_ids[]"]').value;
+        const deletedQuestionIdsInput = questionBox.querySelector('input[name="deleted_question_ids[]"]');
+        deletedQuestionIdsInput.value = questionId;
+        questionBox.style.display = 'none';
+    }
+</script>
+
+<style>
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group input[type="datetime-local"],
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-family: inherit;
+    }
+
+    .form-group textarea {
+        resize: none;
+        height: 36px;
+    }
+
+    .question-box {
+        border: 2px solid #e1e4e8;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+    }
+
+    .options-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin: 15px 0;
+    }
+
+    .question-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #e1e4e8;
+    }
+
+    .question-footer .form-group {
+        margin-bottom: 0;
+    }
+
+    .back-btn {
+        background-color: #6c757d;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 14px;
+        transition: background-color 0.3s;
+    }
+
+    .back-btn:hover {
+        background-color: #5a6268;
+    }
+</style>
+{% endblock %}

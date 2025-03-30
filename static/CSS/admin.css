@@ -1,0 +1,727 @@
+/* General Styling */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
+    background-color: #eaeff5; /* Light, softer background */
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #2c3e50; /* Darker, more professional navbar */
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+.navbar .title {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.logout-btn {
+    background: #e74c3c;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.logout-btn:hover {
+    background: #c0392b;
+}
+
+/* Navbar with Navigation Links */
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-left h1 {
+    margin: 0;
+    font-size: 24px;
+    white-space: nowrap;
+}
+
+.search-container {
+    margin-left: 15px;
+}
+
+.search-input {
+    width: 250px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.search-input:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.2);
+    width: 300px;
+    transition: width 0.3s ease;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    white-space: nowrap;
+}
+
+.nav-link {
+    color: #fff;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    font-weight: bold;
+}
+
+.nav-separator {
+    color: #fff;
+    margin: 0 5px;
+}
+
+.current-page {
+    color: #fff;
+    opacity: 0.8;
+}
+
+/* Container */
+.container {
+    max-width: 1000px; /* Increased max-width */
+    margin: 0 auto; /* Changed from 30px to 0 */
+    padding: 30px; /* Increased padding */
+    border-radius: 12px; /* More rounded corners */
+}
+
+/* General styles for admin dashboard */
+.container {
+    padding: 30px;
+}
+
+.container .header {
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    background-color: #2c3e50;  /* Dark blue background */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.container .header h3 {
+    color: #ffffff;  /* White text */
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-size: 1.5em;
+    font-weight: 500;
+}
+
+h3 {
+    text-align: left; /* Align heading to the left */
+    color: #2c3e50; /* Darker heading color */
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+}
+
+/* Subject Box */
+.subject-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+    gap: 20px;
+}
+
+.subject-box {
+    background: #f9f9f9;
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.subject-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.subject-header h4 {
+    margin: 0 0 10px;
+    font-size: 1.3em;
+    color: #2c3e50;
+}
+
+.subject-header p {
+    font-size: 1em;
+    color: #555;
+}
+
+/* Chapters */
+.chapter-list {
+    margin-top: 15px;
+}
+
+.chapter-box {
+    background: #ecf0f1;
+    padding: 8px 12px;
+    border-radius: 5px;
+    margin: 8px 0;
+    color: #444;
+}
+
+.chapter-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    margin: 8px 0;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}
+
+.chapter-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.chapter-content {
+    width: 100%;
+}
+
+.chapter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* Buttons */
+.create-btn, .btn {
+    background-color: #3498db; /* Brighter blue */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 6px;
+    display: inline-block;
+    margin: 10px 0;
+    transition: background-color 0.3s ease;
+}
+
+.create-btn:hover, .btn:hover {
+    background-color: #2980b9; /* Darker blue on hover */
+}
+
+.delete-subject {
+    background-color: #e74c3c; /* Red */
+}
+
+.update-subject {
+    background-color: #27ae60; /* Green */
+}
+
+/* Action Buttons for Chapters */
+.action-buttons {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.action-buttons .btn,
+.action-buttons a,
+.action-buttons button {
+    min-width: 100px;  /* Set minimum width for all buttons */
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.action-buttons .update-chapter {
+    background-color: #28a745;
+    color: white;
+}
+
+.action-buttons .delete-chapter {
+    background-color: #dc3545;
+    color: white;
+}
+
+.action-buttons .btn,
+.action-buttons a {
+    margin-left: 8px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;  /* Remove underline from all buttons */
+}
+
+/* Modal */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px; /* Increased modal width */
+}
+
+/* Modal styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 400px;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+close {
+    float: right;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+/* Modal Actions */
+.modal-actions {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.modal-actions button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.delete-btn {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.cancel-btn {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Flash Messages */
+.flash {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.flash.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.flash.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.flash.info {
+    background-color: #cce5ff;
+    color: #004085;
+    border: 1px solid #b8daff;
+}
+
+/* No Subjects Message */
+.no-subjects, .no-chapters {
+    text-align: center;
+    color: #666;
+    margin-top: 10px;
+}
+
+/* Quiz List Styles */
+.quiz-list {
+    margin-left: 20px;
+    margin-top: 10px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 5px;
+}
+
+.quiz-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    margin: 5px 0;
+    background: white;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.quiz-item:hover {
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.quiz-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.quiz-actions .btn,
+.quiz-actions button,
+.quiz-actions a {
+    min-width: 80px;
+    padding: 8px 12px;
+    text-align: center;
+    font-size: 14px;
+    border-radius: 4px;
+    margin: 0;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.edit-quiz {
+    background-color: #ffc107;  /* Yellow */
+    color: #000;
+}
+
+.delete-quiz {
+    background-color: #dc3545;  /* Red */
+    color: white;
+}
+
+.show-quiz {
+    background-color: #007bff;  /* Blue */
+    color: white;
+}
+
+.post-quiz {
+    background-color: #28a745;  /* Green */
+    color: white;
+}
+
+.posted-quiz {
+    min-width: 80px;
+    text-align: center;
+    padding: 8px 12px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    color: #28a745;
+    font-weight: bold;
+}
+
+.quiz-container {
+    margin-left: 20px;
+    margin-top: 10px;
+}
+
+.quiz-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.quiz-duration {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.quiz-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.edit-quiz, .delete-quiz {
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.edit-quiz {
+    background: #28a745;
+}
+
+.delete-quiz {
+    background: #dc3545;
+}
+
+/* Posted Quiz */
+.posted-quiz {
+    color: green;
+    font-weight: bold;
+}
+
+/* Summary Boxes */
+.summary-boxes {
+    display: flex;
+    justify-content: space-around;
+    margin: 30px 0;  /* Increased margin */
+    gap: 25px;  /* Added gap between boxes */
+}
+
+.summary-box {
+    background: #f8f9fa;
+    padding: 25px;  /* Increased padding */
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    flex: 1;
+    min-width: 200px;
+}
+
+.summary-box h3 {
+    font-size: 1.2em;
+    margin-bottom: 15px;
+    color: #2c3e50;
+    border-bottom: none;  /* Remove the bottom border */
+    padding-bottom: 0;  /* Remove padding since no border */
+}
+
+.summary-box span {
+    font-size: 2em;  /* Larger number */
+    font-weight: bold;
+    color: #3498db;
+    display: block;
+    margin: 15px 0;
+}
+
+.manage-btn {
+    margin-top: 15px;
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #28a745;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.manage-btn:hover {
+    background-color: #218838;
+}
+
+/* User Scores Table */
+.user-scores-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.user-scores-table th,
+.user-scores-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.user-scores-table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.user-scores-table tr:hover {
+    background-color: #f9f9f9;
+}
+
+.user-scores-table td {
+    color: #333;
+}
+
+/* Delete User Button */
+.delete-user {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.delete-user:hover {
+    background-color: #c82333;
+}
+
+/* Chapter Management Specific Styles */
+.header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.chapter-container {
+    margin-top: 20px;
+}
+
+.chapter-info {
+    flex: 1;
+}
+
+.chapter-info p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.chapter-info small {
+    color: #888;
+    font-size: 0.9em;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.form-group textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+/* Show Quiz Button */
+.show-quiz {
+    background-color: #17a2b8;
+}
+
+/* Header Buttons Layout */
+.header {
+    padding: 15px 20px;
+    background: #2c3e50;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.header-buttons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.header-buttons .btn {
+    margin: 0;
+    text-decoration: none;  /* Remove underline from buttons */
+}
+
+.header-buttons .create-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.header-buttons .btn:first-child {
+    background-color: #6c757d;
+    color: white;  /* Add white text color for better contrast */
+}
+
+.header h3 {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+/* Subject Actions */
+.subject-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;  /* Reduced from 10px */
+    min-width: 120px;
+}
+
+.action-btn {
+    width: 100%;
+    padding: 6px 0;  /* Reduced from 8px */
+    text-align: center;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}

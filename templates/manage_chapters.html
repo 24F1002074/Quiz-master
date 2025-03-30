@@ -1,0 +1,260 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+<div class="container full-width">
+    <div class="header">
+        <h3>{{ subject.name }} - Chapters</h3>
+        <div class="header-buttons">
+            <a href="{{ url_for('admin.manage_subjects') }}" class="btn">Back to Subjects</a>
+            <button class="create-btn" onclick="openChapterModal()">+ Create Chapter</button>
+        </div>
+    </div>
+
+    <div class="chapters-grid">
+        {% for chapter in chapters %}
+            <div class="chapter-box">
+                <div class="chapter-content">
+                    <div class="chapter-info">
+                        <div class="chapter-name">{{ chapter.name }}</div>
+                        <div class="chapter-description"><b>Description:</b> {{ chapter.description }}</div>
+                        <div class="chapter-meta"><b>Quizzes:</b> {{ chapter.quizzes|length }}</div>
+                    </div>
+                </div>
+                <div class="chapter-actions">
+                    <a href="{{ url_for('admin.manage_quizzes', chapter_id=chapter.id) }}" class="btn action-btn" style="width: 120px; text-decoration: none;">Quizzes</a>
+                    <button onclick="openEditChapterModal('{{ chapter.id }}', `{{ chapter.name }}`, `{{ chapter.description }}`)" class="btn action-btn update-chapter" style="width: 120px">Update</button>
+                    <form method="POST" action="{{ url_for('admin.delete_chapter', chapter_id=chapter.id) }}" style="display: block; width: 120px;">
+                        <button type="submit" class="btn action-btn delete-chapter" onclick="return confirm('Are you sure you want to delete this chapter and all its quizzes?')">Delete</button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if not chapters %}
+        <p class="no-chapters">No chapters available. Create a new one.</p>
+    {% endif %}
+
+    <!-- Chapter Modal -->
+    <div id="chapterModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeChapterModal()">&times;</span>
+            <h3 id="modal-title">Create Chapter</h3>
+            <form id="chapterForm" method="POST">
+                <input type="hidden" id="chapter-id" name="chapter_id">
+                <div class="form-group">
+                    <label for="chapter-name">Name:</label>
+                    <input type="text" id="chapter-name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="chapter-description">Description:</label>
+                    <textarea id="chapter-description" name="description" required></textarea>
+                </div>
+                <button type="submit" class="btn modal-btn">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openChapterModal() {
+            document.getElementById('chapter-id').value = "";
+            document.getElementById('chapter-name').value = "";
+            document.getElementById('chapter-description').value = "";
+            document.getElementById('modal-title').innerText = "Create Chapter";
+            document.getElementById('chapterForm').action = "{{ url_for('admin.add_chapter', subject_id=subject.id) }}";
+            document.getElementById('chapterModal').style.display = "block";
+        }
+
+        function openEditChapterModal(id, name, description) {
+            document.getElementById('chapter-id').value = id;
+            document.getElementById('chapter-name').value = name;
+            document.getElementById('chapter-description').value = description;
+            document.getElementById('modal-title').innerText = "Edit Chapter";
+            document.getElementById('chapterForm').action = "{{ url_for('admin.update_chapter', chapter_id=0) }}".replace('0', id);
+            document.getElementById('chapterModal').style.display = "block";
+        }
+
+        function closeChapterModal() {
+            document.getElementById('chapterModal').style.display = "none";
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            let modal = document.getElementById('chapterModal');
+            if (event.target == modal) {
+                closeChapterModal();
+            }
+        }
+    </script>
+
+    <style>
+        .chapter-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .chapter-item {
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .full-width {
+            max-width: 95% !important;
+        }
+
+        .chapters-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 10px 0;
+        }
+
+        .chapter-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .chapter-box {
+            background: white;
+            padding: 18px 22px;
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .chapter-box:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .chapter-content {
+            flex: 1;
+            padding-right: 40px;
+        }
+
+        .chapter-name {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .chapter-description {
+            color: #666;
+            line-height: 1.5;
+            font-size: 1.05em;
+            margin-bottom: 10px;
+        }
+
+        .chapter-meta {
+            font-size: 1em;
+            color: #666;
+        }
+
+        .chapter-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 130px;
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 7px 0;
+            margin: 0;
+            text-align: center;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .update-chapter {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .delete-chapter {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .header-buttons .btn,
+        .header-buttons .create-btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .header-buttons .btn {
+            background-color: #6c757d;  /* Gray color */
+            color: white;
+        }
+
+        .header-buttons .create-btn {
+            background-color: #28a745;  /* Green color */
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .header-buttons .btn:hover {
+            background-color: #5a6268;
+        }
+
+        .header-buttons .create-btn:hover {
+            background-color: #218838;
+        }
+
+        #chapterModal .modal-content {
+            width: 70%;
+            max-width: 800px;
+            padding: 40px;  /* Increased padding */
+            margin: 10% auto;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            background: white;
+        }
+
+        #chapterModal .form-group {
+            margin-bottom: 25px;
+        }
+
+        #chapterModal .form-group label {
+            margin-bottom: 10px;
+            display: block;
+            font-weight: 500;
+        }
+
+        #chapterModal .form-group input,
+        #chapterModal .form-group textarea {
+            padding: 12px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            width: 100%;
+        }
+
+        #chapterModal .form-group textarea {
+            min-height: 120px;
+        }
+    </style>
+</div>
+{% endblock %}

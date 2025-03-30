@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="quiz-details-container">
+    <div class="quiz-details-box">
+        <h1>{{ quiz.name }}</h1>
+        <div class="quiz-info">
+            <p><strong>Chapter:</strong> {{ quiz.chapter.name }}</p>
+            <p><strong>Subject:</strong> {{ quiz.chapter.subject.name }}</p>
+            <p><strong>Duration:</strong> {{ quiz.time_duration }} minutes</p>
+            <p><strong>Total Questions:</strong> {{ quiz.questions|length }}</p>
+        </div>
+        {% if not session.get('quiz_id') %}
+            <a href="{{ url_for('user.start_quiz', quiz_id=quiz.id) }}" class="start-quiz-btn">Start Quiz</a>
+        {% else %}
+            <p class="warning-text">You have already started a quiz. Complete it to start a new one.</p>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .quiz-details-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 100px);
+        padding: 20px;
+    }
+
+    .quiz-details-box {
+        background: white;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 600px;
+        text-align: center;
+    }
+
+    .quiz-details-box h1 {
+        color: #2c3e50;
+        margin-bottom: 30px;
+        font-size: 2em;
+    }
+
+    .quiz-info {
+        text-align: left;
+        margin: 30px 0;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .quiz-info p {
+        margin: 15px 0;
+        font-size: 1.1em;
+        color: #2c3e50;
+    }
+
+    .quiz-info strong {
+        color: #34495e;
+        margin-right: 10px;
+    }
+
+    .start-quiz-btn {
+        display: inline-block;
+        padding: 12px 40px;
+        background-color: #28a745;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 1.2em;
+        transition: all 0.3s ease;
+    }
+
+    .start-quiz-btn:hover {
+        background-color: #218838;
+        transform: translateY(-2px);
+    }
+
+    .warning-text {
+        color: #dc3545;
+        margin-top: 20px;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+

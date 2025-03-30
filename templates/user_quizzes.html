@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+.quiz-link {
+    display: block;
+    padding: 10px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.quiz-available {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.quiz-completed {
+    background-color: #d4edda;
+    color: #155724;
+}
+</style>
+
+<div class="container">
+    <h2>Quizzes for {{ chapter.name }}</h2>
+    <ul style="list-style: none; padding: 0;">
+        {% for quiz in quizzes %}
+            <li style="margin-bottom: 10px;">
+                {% set user_id = session.get('user_id') %}
+                {% set completed = False %}
+                {% if user_id %}
+                    {% set score = Score.query.filter_by(quiz_id=quiz.id, user_id=user_id).first() %}
+                    {% if score %}
+                        {% set completed = True %}
+                    {% endif %}
+                {% endif %}
+
+                <a href="{{ url_for('user.get_quiz_details', quiz_id=quiz.id) }}" class="quiz-link {% if completed %}quiz-completed{% else %}quiz-available{% endif %}">
+                    {{ quiz.name }}
+                </a>
+                {% if completed %}
+                    <span style="color: green;">Completed</span>
+                {% else %}
+                    <a href="{{ url_for('user.start_quiz', quiz_id=quiz.id) }}" style="display: inline-block; margin-left: 10px; padding: 5px 10px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">Start Quiz</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('user.list_chapters', subject_id=chapter.subject_id) }}">Back to Chapters</a>
+</div>
+{% endblock %}

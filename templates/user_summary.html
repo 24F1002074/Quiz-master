@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Your Performance Summary</h2>
+
+    <div class="summary-boxes">
+        <div class="summary-box highest">
+            <div class="icon">🏆</div>
+            <div class="box-content">
+                <h4>Highest Score</h4>
+                <div class="score">{{ highest_score }}%</div>
+                <div class="quiz-name">{{ highest_quiz_name }}</div>
+            </div>
+        </div>
+        <div class="summary-box average">
+            <div class="icon">📊</div>
+            <div class="box-content">
+                <h4>Average Score</h4>
+                <div class="score">{{ average_score }}%</div>
+                <div class="quiz-name">Across all subjects</div>
+            </div>
+        </div>
+        <div class="summary-box completion">
+            <div class="icon">✅</div>
+            <div class="box-content">
+                <h4>Completion Rate</h4>
+                <div class="score">{{ completion_rate }}%</div>
+                <div class="quiz-name">{{ completed_count }}/{{ total_quizzes }} quizzes</div>
+            </div>
+        </div>
+        <div class="summary-box lowest">
+            <div class="icon">📉</div>
+            <div class="box-content">
+                <h4>Lowest Score</h4>
+                <div class="score">{{ lowest_score }}%</div>
+                <div class="quiz-name">{{ lowest_quiz_name }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="charts-container">
+        <div class="chart-box">
+            <h3>Subject-wise Performance</h3>
+            <canvas id="performanceChart"></canvas>
+        </div>
+        <div class="chart-box">
+            <h3>Quiz Completion Status</h3>
+            <canvas id="completionChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<style>
+    .summary-boxes {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        margin-bottom: 40px;
+        margin-top: 20px;
+    }
+
+    .summary-box {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .summary-box .icon {
+        font-size: 2em;
+    }
+
+    .summary-box h4 {
+        margin: 0;
+        color: #666;
+        font-size: 0.9em;
+    }
+
+    .summary-box .score {
+        font-size: 1.8em;
+        font-weight: bold;
+        color: #2c3e50;
+        margin: 5px 0;
+    }
+
+    .summary-box .quiz-name {
+        font-size: 0.8em;
+        color: #666;
+    }
+
+    .charts-container {
+        display: grid;
+        grid-template-columns: 60% 40%;
+        gap: 20px;
+        margin-top: 30px;
+    }
+
+    .chart-box {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .chart-box h3 {
+        margin-bottom: 20px;
+        color: #2c3e50;
+        text-align: center;
+        font-size: 1.2em;
+    }
+
+    canvas {
+        max-height: 400px !important;
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Performance Chart
+    const performanceCtx = document.getElementById('performanceChart');
+    new Chart(performanceCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ subject_names | tojson | safe }},
+            datasets: [{
+                label: 'Average Score (%)',
+                data: {{ subject_scores | tojson | safe }},
+                backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 2,
+                borderRadius: 5,
+                barThickness: 60
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    grid: {
+                        display: false
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+
+    // Completion Chart
+    const completionCtx = document.getElementById('completionChart');
+    new Chart(completionCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Completed', 'Pending'],
+            datasets: [{
+                data: [{{ completed_count }}, {{ pending_count }}],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.8)',
+                    'rgba(255, 206, 86, 0.8)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(255, 206, 86, 1)'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        font: {
+                            size: 12
+                        }
+                    }
+                }
+            },
+            cutout: '70%'
+        }
+    });
+</script>
+{% endblock %}

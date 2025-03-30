@@ -1,0 +1,24 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="summary-boxes">
+        <div class="summary-box">
+            <h3>Total Subjects</h3>
+            <span>{{ subjects|length }}</span>
+            <a href="{{ url_for('admin.manage_subjects') }}" class="btn manage-btn">Manage Subjects</a>
+        </div>
+        <div class="summary-box">
+            <h3>Total Quizzes</h3>
+            <span>{{ total_quizzes }}</span>
+            <a href="{{ url_for('admin.manage_all_quizzes') }}" class="btn manage-btn">Manage Quizzes</a>
+        </div>
+        <div class="summary-box">
+            <h3>Total Users</h3>
+            <span>{{ total_users }}</span>
+            <a href="{{ url_for('admin.manage_users') }}" class="btn manage-btn">Manage Users</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

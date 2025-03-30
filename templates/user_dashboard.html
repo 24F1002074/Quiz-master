@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Welcome, {{ session.get('username') }}</h2>
+
+    <div class="available-quizzes">
+        <h3>Available Quizzes:</h3>
+        {% if available_quizzes %}
+            <table class="available-quizzes-table">
+                <thead>
+                    <tr>
+                        <th>Quiz Name</th>
+                        <th>Subject</th>
+                        <th width="20%">Chapter</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for quiz in available_quizzes %}
+                        <tr>
+                            <td>{{ quiz.name }}</td>
+                            <td>{{ quiz.chapter.subject.name }}</td>
+                            <td>{{ quiz.chapter.name }}</td>
+                            <td><a href="{{ url_for('user.get_quiz_details', quiz_id=quiz.id) }}" class="attend-quiz-btn">Attend Quiz</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No quizzes available at the moment.</p>
+        {% endif %}
+    </div>
+
+    <div class="upcoming-quizzes">
+        <h3>Upcoming Quizzes:</h3>
+        {% if upcoming_quizzes %}
+            <table class="upcoming-quizzes-table">
+                <thead>
+                    <tr>
+                        <th>Quiz Name</th>
+                        <th>Subject</th>
+                        <th width="20%">Chapter</th>
+                        <th width="20%">Available From</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for quiz in upcoming_quizzes %}
+                        <tr>
+                            <td>{{ quiz.name }}</td>
+                            <td>{{ quiz.chapter.subject.name }}</td>
+                            <td>{{ quiz.chapter.name }}</td>
+                            <td>{{ quiz.date_of_quiz.strftime('%d-%m-%Y %H:%M:%S') }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No upcoming quizzes.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

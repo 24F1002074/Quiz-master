@@ -1,0 +1,188 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>{{ 'Edit' if quiz else 'Create' }} Quiz</h2>
+    <form method="POST">
+        <div class="form-group">
+            <label>Quiz Name:</label>
+            <input type="text" name="name" value="{{ quiz.name if quiz else '' }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Schedule Date and Time:</label>
+            <input type="datetime-local" name="date_of_quiz" 
+                   value="{{ quiz.date_of_quiz.strftime('%Y-%m-%dT%H:%M') if quiz else '' }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Duration (minutes):</label>
+            <input type="number" name="duration" value="{{ quiz.time_duration if quiz else '' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label>Remarks:</label>
+            <textarea name="remarks" rows="1">{{ quiz.remarks if quiz else '' }}</textarea>
+        </div>
+
+        <div id="questions-container">
+            {% if quiz and quiz.questions %}
+                {% for question in quiz.questions %}
+                    <div class="question-box">
+                        <input type="hidden" name="question_ids[]" value="{{ question.id }}">
+                        <div class="form-group">
+                            <label>Question:</label>
+                            <input type="text" name="questions[]" value="{{ question.question_statement }}" required>
+                        </div>
+                        <div class="options-grid">
+                            <div class="form-group">
+                                <label>Option 1:</label>
+                                <input type="text" name="options1[]" value="{{ question.option1 }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Option 2:</label>
+                                <input type="text" name="options2[]" value="{{ question.option2 }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Option 3:</label>
+                                <input type="text" name="options3[]" value="{{ question.option3 }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Option 4:</label>
+                                <input type="text" name="options4[]" value="{{ question.option4 }}">
+                            </div>
+                        </div>
+                        <div class="question-footer">
+                            <div class="form-group">
+                                <label>Correct Option:</label>
+                                <select name="correct_options[]" required>
+                                    <option value="1" {% if question.correct_option == "1" %}selected{% endif %}>Option 1</option>
+                                    <option value="2" {% if question.correct_option == "2" %}selected{% endif %}>Option 2</option>
+                                    <option value="3" {% if question.correct_option == "3" %}selected{% endif %}>Option 3</option>
+                                    <option value="4" {% if question.correct_option == "4" %}selected{% endif %}>Option 4</option>
+                                </select>
+                            </div>
+                            <button type="button" onclick="removeQuestion(this)" class="btn delete-btn">Remove Question</button>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <button type="button" onclick="addQuestion()" class="btn add-btn">Add Question</button>
+        <button type="submit" class="btn submit-btn">Save Quiz</button>
+    </form>
+</div>
+
+<style>
+    .question-box {
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    .form-group {
+        margin-bottom: 10px;
+    }
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .form-group input[type="text"],
+    .form-group select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    .form-group textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+        min-height: 100px;
+        resize: vertical;
+    }
+    .btn {
+        padding: 8px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .add-btn {
+        background-color: #28a745;
+        color: white;
+    }
+    .delete-btn {
+        background-color: #dc3545;
+        color: white;
+    }
+    .submit-btn {
+        background-color: #007bff;
+        color: white;
+    }
+    .options-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    .question-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+</style>
+
+<script>
+    function addQuestion() {
+        const container = document.getElementById('questions-container');
+        const questionBox = document.createElement('div');
+        questionBox.className = 'question-box';
+        questionBox.innerHTML = `
+            <div class="form-group">
+                <label>Question:</label>
+                <input type="text" name="questions[]" required>
+            </div>
+            <div class="options-grid">
+                <div class="form-group">
+                    <label>Option 1:</label>
+                    <input type="text" name="options1[]" required>
+                </div>
+                <div class="form-group">
+                    <label>Option 2:</label>
+                    <input type="text" name="options2[]" required>
+                </div>
+                <div class="form-group">
+                    <label>Option 3:</label>
+                    <input type="text" name="options3[]">
+                </div>
+                <div class="form-group">
+                    <label>Option 4:</label>
+                    <input type="text" name="options4[]">
+                </div>
+            </div>
+            <div class="question-footer">
+                <div class="form-group">
+                    <label>Correct Option:</label>
+                    <select name="correct_options[]" required>
+                        <option value="1">Option 1</option>
+                        <option value="2">Option 2</option>
+                        <option value="3">Option 3</option>
+                        <option value="4">Option 4</option>
+                    </select>
+                </div>
+                <button type="button" onclick="removeQuestion(this)" class="btn delete-btn">Remove Question</button>
+            </div>
+        `;
+        container.appendChild(questionBox);
+    }
+
+    function removeQuestion(button) {
+        button.closest('.question-box').remove();
+    }
+</script>
+{% endblock %}

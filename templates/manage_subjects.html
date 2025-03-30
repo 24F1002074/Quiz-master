@@ -1,0 +1,271 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+<div class="container full-width">
+    <div class="header">
+        <h3>Manage Subjects</h3>
+        <div class="header-buttons">
+            <a href="{{ url_for('admin.admin_dashboard') }}" class="btn">Back to Dashboard</a>
+            <button class="create-btn" onclick="openSubjectModal()">+ Create Subject</button>
+        </div>
+    </div>
+
+    <div class="subjects-grid">
+        {% for subject in subjects %}
+            <div class="subject-box">
+                <div class="subject-content">
+                    <div class="subject-info">
+                        <div class="subject-name">{{ subject.name }}</div>
+                        <div class="subject-description"><b>Description:</b> {{ subject.description }}</div>
+                        <div class="subject-meta"><b>Chapters:</b> {{ subject.chapters|length }}</div>
+                    </div>
+                </div>
+                <div class="subject-actions">
+                    <a href="{{ url_for('admin.manage_chapters', subject_id=subject.id) }}" class="btn action-btn" style="width: 120px; text-decoration: none;">Chapters</a>
+                    <button onclick="openEditSubjectModal('{{ subject.id }}', `{{ subject.name }}`, `{{ subject.description }}`)" class="btn action-btn update-subject" style="width: 120px">Update</button>
+                    <form method="POST" action="{{ url_for('admin.delete_subject', subject_id=subject.id) }}" style="display: block; width: 120px;">
+                        <button type="submit" class="btn action-btn delete-subject" onclick="return confirm('Are you sure you want to delete this subject and all its associated chapters and quizzes?')">Delete</button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if not subjects %}
+        <p class="no-subjects">No subjects available. Create a new one.</p>
+    {% endif %}
+
+    <!-- Subject Modal -->
+    <div id="subjectModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeSubjectModal()">&times;</span>
+            <h3 id="modal-title">Create Subject</h3>
+            <form id="subjectForm" method="POST" action="{{ url_for('admin.add_subject') }}">
+                <input type="hidden" id="subject-id" name="id">
+                <div class="form-group">
+                    <label for="subject-name">Name:</label>
+                    <input type="text" id="subject-name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="subject-description">Description:</label>
+                    <textarea id="subject-description" name="description" required></textarea>
+                </div>
+                <button type="submit" class="btn modal-btn">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openSubjectModal() {
+            document.getElementById('subject-id').value = "";
+            document.getElementById('subject-name').value = "";
+            document.getElementById('subject-description').value = "";
+            document.getElementById('modal-title').innerText = "Create Subject";
+            document.getElementById('subjectForm').action = "{{ url_for('admin.add_subject') }}";
+            document.getElementById('subjectModal').style.display = "block";
+        }
+
+        function openEditSubjectModal(id, name, description) {
+            document.getElementById('subject-id').value = id;
+            document.getElementById('subject-name').value = name.trim();
+            document.getElementById('subject-description').value = description.trim();
+            document.getElementById('modal-title').innerText = "Edit Subject";
+            document.getElementById('subjectForm').action = "{{ url_for('admin.update_subject') }}";
+            document.getElementById('subjectModal').style.display = "block";
+            console.log("Opening modal for subject:", id, name, description); // Debug log
+        }
+
+        function closeSubjectModal() {
+            document.getElementById('subjectModal').style.display = "none";
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            let modal = document.getElementById('subjectModal');
+            if (event.target == modal) {
+                closeSubjectModal();
+            }
+        }
+    </script>
+
+    <style>
+        .full-width {
+            max-width: 95% !important;
+        }
+
+        .subjects-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 10px 0;  /* Reduced padding */
+        }
+
+        .subject-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .subject-box {
+            background: white;
+            padding: 18px 22px;  /* Slightly increased padding */
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            margin-bottom: 8px;  /* Reduced from 10px */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .subject-box:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: white;
+            border: 1px solid #e1e4e8;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .header-buttons .btn,
+        .header-buttons .create-btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .header-buttons .btn {
+            background-color: #6c757d;  /* Gray color */
+            color: white;
+        }
+
+        .header-buttons .create-btn {
+            background-color: #28a745;  /* Green color */
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .header-buttons .btn:hover {
+            background-color: #5a6268;
+        }
+
+        .header-buttons .create-btn:hover {
+            background-color: #218838;
+        }
+
+        .subject-content {
+            flex: 1;
+            padding-right: 40px;
+        }
+
+        .subject-name {
+            font-size: 1.4em;  /* Slightly increased from 1.3em */
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .subject-description {
+            color: #666;
+            line-height: 1.5;
+            font-size: 1.05em;  /* Slightly increased */
+            margin-bottom: 10px;
+        }
+
+        .subject-meta {
+            font-size: 1em;  /* Slightly increased from 0.9em */
+            color: #666;
+        }
+
+        .subject-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;  /* Space between buttons */
+            min-width: 130px;  /* Slightly increased from 120px */
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 7px 0;  /* Slightly increased from 6px */
+            margin: 0;
+            text-align: center;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 15px;  /* Slightly increased from 14px */
+            transition: background-color 0.3s ease;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .update-subject {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .delete-subject {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        #subjectModal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        #subjectModal .modal-content {
+            width: 70%;
+            max-width: 800px;
+            padding: 40px;
+            margin: 10% auto;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            margin-bottom: 10px;
+            display: block;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 12px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            width: 100%;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+        }
+    </style>
+</div>
+{% endblock %}

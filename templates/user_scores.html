@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Your Scores</h2>
+    <div class="finished-quizzes">
+        <h3>Finished Quizzes</h3>
+        {% if session['user_id'] %}
+            {% set finished_quizzes = Score.query.filter_by(user_id=session['user_id']).all() %}
+            {% if finished_quizzes %}
+                <table class="finished-quizzes-table">
+                    <thead>
+                        <tr>
+                            <th>Quiz Name</th>
+                            <th>Subject</th>
+                            <th>Chapter</th>
+                            <th>Score</th>
+                            <th>Completed On</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for score in finished_quizzes %}
+                            <tr>
+                                <td>{{ score.quiz.name }}</td>
+                                <td>{{ score.quiz.chapter.subject.name }}</td>
+                                <td>{{ score.quiz.chapter.name }}</td>
+                                <td>{{ "%.1f"|format(score.total_scored / score.quiz.questions|length * 100) }}%</td>
+                                <td>{{ score.time_stamp_of_attempt.strftime('%d-%m-%Y %H:%M:%S') }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No quizzes finished yet.</p>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

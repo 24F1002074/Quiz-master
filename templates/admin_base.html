@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Quiz Master{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/admin.css') }}">
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-left">
+            <h1>Quiz Master - Admin</h1>
+            <nav class="nav-links">
+                <a href="{{ url_for('admin.admin_dashboard') }}" {% if request.endpoint == 'admin.admin_dashboard' %}class="active"{% endif %}>Dashboard</a>
+                <a href="{{ url_for('admin.manage_all_quizzes') }}" {% if request.endpoint == 'admin.manage_all_quizzes' %}class="active"{% endif %}>All Quizzes</a>
+                <a href="{{ url_for('admin.manage_users') }}" {% if request.endpoint == 'admin.manage_users' %}class="active"{% endif %}>Manage Users</a>
+                <a href="{{ url_for('admin.scores') }}" {% if request.endpoint == 'admin.scores' %}class="active"{% endif %}>Scores</a>
+                <a href="{{ url_for('admin.summary') }}" {% if request.endpoint == 'admin.summary' %}class="active"{% endif %}>Summary</a>
+                <form action="{{ url_for('admin.search') }}" method="GET" class="search-container">
+                    <input type="search" name="q" placeholder="Search subjects, chapters, quizzes..." class="search-input">
+                </form>
+            </nav>
+        </div>
+        <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+    </header>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-container">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        setTimeout(function() {
+            var flashMessages = document.getElementsByClassName('flash');
+            for(var i = 0; i < flashMessages.length; i++) {
+                flashMessages[i].style.display = 'none';
+            }
+        }, 5000);
+    </script>
+</body>
+</html>

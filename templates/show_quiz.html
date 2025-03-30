@@ -1,0 +1,95 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h3>Quiz: {{ quiz.name }}</h3>
+        <a href="{{ url_for('admin.manage_quizzes', chapter_id=quiz.chapter_id) }}" class="btn back-btn">Back to Manage Quizzes</a>
+    </div>
+
+    <div class="quiz-details">
+        <p><b>Duration:</b> {{ quiz.time_duration }} minutes</p>
+        <p><b>Scheduled Date and Time:</b> {{ quiz.date_of_quiz.strftime('%d-%m-%Y %H:%M') }}</p>
+        {% if quiz.remarks %}
+            <div class="quiz-remarks">
+                <b>Remarks:</b> {{ quiz.remarks }}
+            </div>
+        {% endif %}
+    </div>
+
+    {% if quiz.questions %}
+        {% for question in quiz.questions %}
+            <div class="question-box">
+                <div class="question-statement"><b>Question:</b> {{ question.question_statement }}</div>
+                <div class="option">1. {% if question.correct_option == "1" %}<span class="correct-option"><b>{{ question.option1 }} (Correct)</b></span>{% else %}{{ question.option1 }}{% endif %}</div>
+                <div class="option">2. {% if question.correct_option == "2" %}<span class="correct-option"><b>{{ question.option2 }} (Correct)</b></span>{% else %}{{ question.option2 }}{% endif %}</div>
+                {% if question.option3 %}
+                    <div class="option">3. {% if question.correct_option == "3" %}<span class="correct-option"><b>{{ question.option3 }} (Correct)</b></span>{% else %}{{ question.option3 }}{% endif %}</div>
+                {% endif %}
+                {% if question.option4 %}
+                    <div class="option">4. {% if question.correct_option == "4" %}<span class="correct-option"><b>{{ question.option4 }} (Correct)</b></span>{% else %}{{ question.option4 }}{% endif %}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No questions available for this quiz.</p>
+    {% endif %}
+</div>
+
+<style>
+    .quiz-remarks {
+        padding: 0;
+        margin-bottom: 0;
+        border: none;
+        border-radius: 0;
+        background-color: transparent;
+    }
+
+    .quiz-details {
+        margin-bottom: 20px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
+    .question-box {
+        padding: 15px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
+    .question-statement {
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .option {
+        margin: 5px 0;
+    }
+
+    .correct-option {
+        color: green;
+    }
+
+    .back-btn {
+        background-color: #6c757d;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 14px;
+        transition: background-color 0.3s;
+    }
+
+    .back-btn:hover {
+        background-color: #5a6268;
+    }
+
+    .container {
+        max-width: 95%;
+    }
+</style>
+{% endblock %}

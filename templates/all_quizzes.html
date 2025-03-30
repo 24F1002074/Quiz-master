@@ -1,0 +1,150 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+<div class="container full-width">
+    <div class="header">
+        <h3>All Quizzes</h3>
+        <a href="{{ url_for('admin.admin_dashboard') }}" class="btn dashboard-btn">Back to Dashboard</a>
+    </div>
+
+    {% if subjects %}
+        {% for subject in subjects %}
+            <div class="subject-box">
+                <h3>{{ subject.name }}</h3><br>
+                <div style="margin-left: 20px;">
+                    <table class="all-quizzes-table">
+                        <thead>
+                            <tr>
+                                <th>Quiz Name</th>
+                                <th>Chapter Name</th>
+                                <th>Scheduled Time</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for chapter in subject.chapters %}
+                                {% for quiz in chapter.quizzes %}
+                                    <tr>
+                                        <td>{{ quiz.name }}</td>
+                                        <td style="padding-left: -30px;">{{ chapter.name }}</td>
+                                        <td>{{ quiz.date_of_quiz.strftime('%d-%m-%Y %H:%M:%S') }}</td>
+                                        <td>
+                                            {% if not quiz.posted %}
+                                                <a href="{{ url_for('admin.edit_quiz', quiz_id=quiz.id) }}" class="btn edit-quiz">Edit</a>
+                                                <form method="POST" action="{{ url_for('admin.post_quiz', quiz_id=quiz.id) }}" style="display: inline;">
+                                                    <button type="submit" class="btn post-quiz">Post</button>
+                                                </form>
+                                            {% else %}
+                                                <span class="posted-quiz">Posted</span>
+                                            {% endif %}
+                                            <a href="{{ url_for('admin.show_quiz', quiz_id=quiz.id) }}" class="btn show-quiz">Show</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="no-quizzes">No quizzes available.</p>
+    {% endif %}
+</div>
+
+<style>
+    .full-width {
+        max-width: 95% !important;
+    }
+
+    .all-quizzes-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        margin-bottom: 15px; /* Reduced margin bottom */
+    }
+
+    .all-quizzes-table th,
+    .all-quizzes-table td {
+        padding: 0px 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .all-quizzes-table th {
+        background-color: #f5f5f5;
+        font-weight: bold;
+    }
+
+    .all-quizzes-table tr {
+        background-color: #f9f9f9;
+    }
+
+    .quiz-actions {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+    }
+
+    .edit-quiz, .delete-quiz, .show-quiz, .post-quiz {
+        padding: 6px 10px;
+        border-radius: 4px;
+        text-decoration: none;
+        color: white;
+    }
+
+    .edit-quiz {
+        background: #28a745;
+    }
+
+    .delete-quiz {
+        background: #dc3545;
+    }
+
+    .show-quiz {
+        background: #007bff;
+    }
+
+    .post-quiz {
+        background: #17a2b8;
+    }
+
+    .posted-quiz {
+        color: green;
+        font-weight: bold;
+    }
+
+    .dashboard-btn {
+        background-color: #6c757d;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+    .dashboard-btn:hover {
+        background-color: #5a6268;
+    }
+
+    h3 {
+        margin-top: 20px;
+        margin-bottom: 10px;
+        color: #333;
+        font-size: 1.5em; /* Increased font size */
+    }
+
+    h5 {
+        margin-top: 10px;
+        margin-bottom: 5px; /* Reduced margin bottom */
+        color: #666;
+    }
+
+    .subject-box {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        padding: 10px;
+    }
+</style>
+{% endblock %}

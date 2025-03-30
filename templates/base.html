@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Quiz Master{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/user.css') }}">
+</head>
+<body>
+    <header class="header">
+        <div class="nav-left">
+            <h1>Quiz Master</h1>
+            <nav class="nav-links">
+                <a href="{{ url_for('user.user_dashboard') }}" {% if request.endpoint == 'user.user_dashboard' %}class="active"{% endif %}>Dashboard</a>
+                <a href="{{ url_for('user.scores') }}" {% if request.endpoint == 'user.scores' %}class="active"{% endif %}>Scores</a>
+                <a href="{{ url_for('user.summary') }}" {% if request.endpoint == 'user.summary' %}class="active"{% endif %}>Summary</a>
+                <form action="{{ url_for('user.search') }}" method="GET" class="search-container">
+                    <input type="search" name="q" placeholder="Search subjects, chapters, quizzes..." class="search-input">
+                </form>
+            </nav>
+        </div>
+        <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+    </header>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-container">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+        function searchItems(query) {
+            if (query.length > 0) {
+                fetch(`/search?q=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        let resultsDiv = document.getElementById('searchResults');
+                        resultsDiv.innerHTML = '';
+                        resultsDiv.style.display = 'block';
+                        
+                        if (data.subjects.length || data.chapters.length || data.quizzes.length) {
+                            if (data.subjects.length) {
+                                resultsDiv.innerHTML += '<div class="search-category">Subjects</div>';
+                                data.subjects.forEach(subject => {
+                                    resultsDiv.innerHTML += `<a href="/subject/${subject.id}/chapters">${subject.name}</a>`;
+                                });
+                            }
+                            if (data.chapters.length) {
+                                resultsDiv.innerHTML += '<div class="search-category">Chapters</div>';
+                                data.chapters.forEach(chapter => {
+                                    resultsDiv.innerHTML += `<a href="/chapter/${chapter.id}/quizzes">${chapter.name} (${chapter.subject_name})</a>`;
+                                });
+                            }
+                            if (data.quizzes.length) {
+                                resultsDiv.innerHTML += '<div class="search-category">Quizzes</div>';
+                                data.quizzes.forEach(quiz => {
+                                    resultsDiv.innerHTML += `<a href="/quiz/${quiz.id}">${quiz.name} (${quiz.chapter_name})</a>`;
+                                });
+                            }
+                        } else {
+                            resultsDiv.innerHTML = '<div class="no-results">No results found</div>';
+                        }
+                    });
+            } else {
+                document.getElementById('searchResults').style.display = 'none';
+            }
+        }
+
+        // Close search results when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.search-container')) {
+                document.getElementById('searchResults').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
+
+x

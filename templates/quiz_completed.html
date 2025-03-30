@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="result-container">
+    <div class="result-box">
+        <h2>Already Completed</h2>
+        <div class="message-box">
+            <p>You have already completed this quiz. Each quiz can only be taken once.</p>
+            <div class="action-buttons">
+                <a href="{{ url_for('user.user_dashboard') }}" class="dashboard-btn">Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .result-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 100px);
+        padding: 20px;
+    }
+
+    .result-box {
+        background: white;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 600px;
+        text-align: center;
+    }
+
+    .message-box {
+        margin: 30px 0;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .dashboard-btn {
+        display: inline-block;
+        padding: 12px 30px;
+        background-color: #3498db;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 1.1em;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+    }
+
+    .dashboard-btn:hover {
+        background-color: #2980b9;
+    }
+</style>
+{% endblock %}

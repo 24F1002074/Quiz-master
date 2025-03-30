@@ -1,0 +1,107 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+<div class="container full-width">
+    <div class="header">
+        <h3>All User Scores</h3>
+        <div class="header-buttons">
+            <a href="{{ url_for('admin.admin_dashboard') }}" class="dashboard-btn">Back to Dashboard</a>
+        </div>
+    </div>
+
+    {% for user in users %}
+        {% if scores_data[user.id] %}
+            <div class="user-scores-section">
+                <h4>{{ user.username }}</h4>
+                <table class="scores-table">
+                    <thead>
+                        <tr>
+                            <th>Quiz Name</th>
+                            <th>Subject</th>
+                            <th>Chapter</th>
+                            <th>Score</th>
+                            <th>Percentage</th>
+                            <th>Completed On</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for score in scores_data[user.id] %}
+                            <tr>
+                                <td>{{ score.quiz_name }}</td>
+                                <td>{{ score.subject_name }}</td>
+                                <td>{{ score.chapter_name }}</td>
+                                <td>{{ score.score }}/{{ score.total_questions }}</td>
+                                <td>{{ score.percentage }}%</td>
+                                <td>{{ score.timestamp.strftime('%d-%m-%Y %H:%M') }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+
+<style>
+    .full-width {
+        max-width: 95% !important;
+    }
+
+    .header-buttons {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .dashboard-btn {
+        background-color: #6c757d;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 14px;
+        min-width: 120px;
+        text-align: center;
+        transition: background-color 0.3s;
+    }
+
+    .dashboard-btn:hover {
+        background-color: #5a6268;
+    }
+
+    .user-scores-section {
+        background: white;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .scores-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    .scores-table th,
+    .scores-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .scores-table th {
+        background-color: #f5f5f5;
+        font-weight: bold;
+    }
+
+    .scores-table tr:hover {
+        background-color: #f9f9f9;
+    }
+
+    h4 {
+        color: #2c3e50;
+        margin: 0 0 15px 0;
+    }
+</style>
+{% endblock %}

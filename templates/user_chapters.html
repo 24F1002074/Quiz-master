@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Chapters for {{ subject.name }}</h2>
+    <ul style="list-style: none; padding: 0;">
+        {% for chapter in chapters %}
+            <li style="margin-bottom: 10px;">
+                <a href="{{ url_for('user.list_quizzes', chapter_id=chapter.id) }}" style="display: block; padding: 10px; background-color: #f0f0f0; border-radius: 5px; text-decoration: none; color: #333;">
+                    {{ chapter.name }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('user.list_subjects') }}">Back to Subjects</a>
+</div>
+{% endblock %}
