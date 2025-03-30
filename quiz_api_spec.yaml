@@ -1,0 +1,129 @@
+openapi: 3.0.0
+info:
+  title: Quiz Master API
+  version: v1
+  description: Complete Quiz Management API
+servers:
+  - url: http://127.0.0.1:5000
+    description: Local development server
+paths:
+  # Admin Routes
+  /admin/dashboard:
+    get:
+      summary: Admin dashboard overview
+      responses:
+        '200':
+          description: Dashboard data retrieved
+
+  /admin/users:
+    get:
+      summary: Get all users
+      responses:
+        '200':
+          description: List of all users
+
+  /admin/quiz/create:
+    post:
+      summary: Create new quiz (admin only)
+      responses:
+        '201':
+          description: Quiz created successfully
+
+  /admin/quiz/{quizId}/edit:
+    put:
+      summary: Edit quiz details
+      responses:
+        '200':
+          description: Quiz updated successfully
+
+  # User Routes
+  /user/profile:
+    get:
+      summary: Get user profile
+      responses:
+        '200':
+          description: User profile data
+    put:
+      summary: Update user profile
+      responses:
+        '200':
+          description: Profile updated
+
+  /user/dashboard:
+    get:
+      summary: User dashboard
+      responses:
+        '200':
+          description: User dashboard data
+
+  # Authentication Routes
+  /auth/login:
+    post:
+      summary: User login
+      responses:
+        '200':
+          description: Login successful
+
+  /auth/register:
+    post:
+      summary: Register new user
+      responses:
+        '201':
+          description: Registration successful
+
+  /auth/logout:
+    post:
+      summary: User logout
+      responses:
+        '200':
+          description: Logout successful
+
+  # Quiz Routes
+  /quiz/available:
+    get:
+      summary: Get available quizzes
+      responses:
+        '200':
+          description: List of available quizzes
+
+  /quiz/{quizId}/start:
+    post:
+      summary: Start quiz attempt
+      responses:
+        '200':
+          description: Quiz started
+
+  /quiz/{quizId}/submit:
+    post:
+      summary: Submit quiz answers
+      responses:
+        '201':
+          description: Quiz submitted successfully
+
+  /quiz/results/{attemptId}:
+    get:
+      summary: Get quiz attempt results
+      responses:
+        '200':
+          description: Quiz results retrieved
+
+  # Question Management
+  /quiz/{quizId}/questions:
+    get:
+      summary: Get quiz questions
+      responses:
+        '200':
+          description: List of questions
+    post:
+      summary: Add new question
+      responses:
+        '201':
+          description: Question added
+
+  # Report Routes
+  /reports/performance:
+    get:
+      summary: Get performance reports
+      responses:
+        '200':
+          description: Performance data retrieved
